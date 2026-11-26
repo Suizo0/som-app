@@ -82,6 +82,7 @@ nav button{flex:1;max-width:190px;background:none;border:0;color:var(--mute);fon
 nav button.on{color:var(--acc)}
 nav svg{width:24px;height:24px}
 body.full nav{display:none}
+.ver{position:fixed;right:12px;bottom:calc(70px + env(safe-area-inset-bottom));font-size:11px;color:var(--mute);opacity:.7;pointer-events:none;z-index:4}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .ex{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px 8px 10px;cursor:pointer}
 .ex svg{width:100%;display:block;background:#14171d;border-radius:11px}
@@ -700,11 +701,12 @@ function weekStrip(){const t=today(),m=parse(monday(t));let h='<div class="week"
   return h+'</div>'}
 /* v8: Heute = nur das heutige Training + Start (+ höchstens 1 Hinweis) */
 const shortN=ex=>EX[ex].name.replace(/ \(.*\)/,'').replace('SZ-','').replace(' vorgebeugt','');
+const VER='v8.1 · 20261126';
 function vHeute(){
   const s=suggest(),t=today(),wn=weekNo();
   let h=`<header class="top"><div><div class="eyebrow">${wn===0?'Start am '+fmtD(S.start):'Woche '+wn}</div><h1>Shape of my life</h1></div><div class="date">${fmtD(t)}</div></header>`;
   h+=banners();
-  if(vacOn())return h+vacHero();
+  if(vacOn())return h+vacHero()+`<div class="ver">${VER}</div>`;
   h+=`<section class="card hero"><div class="eyebrow acc">Heute</div><h2>${s.title}</h2>`;
   if(s.type){const it=itemsOf(s.type).filter(i=>i.blk!=='W');
     if(s.type==='H')h+=`<p class="mute small" style="margin:2px 0 0">${s.sub}</p>`;
@@ -713,6 +715,7 @@ function vHeute(){
      <button class="btn big" onclick="startFlow('${s.type}')">▶ Start</button>`}
   else h+=`<p class="mute">${s.sub}</p>`;
   h+=`</section><div class="row"><button class="link" onclick="sheetOther()">Anderes Training</button><button class="link" onclick="sheetVac()">🌴 Urlaub</button></div>`;
+  h+=`<div class="ver">${VER}</div>`;
   return h}
 function sheetOther(){openSheet(`<h2>Anderes Training</h2>${['A','B','H'].map(x=>`<button class="btn sec" style="margin-top:8px;justify-content:space-between" onclick="closeSheet();startFlow('${x}')"><span>${TNAME[x]}</span><span class="mute">${estMin(x)} min</span></button>`).join('')}<button class="link" onclick="closeSheet()">Schließen</button>`)}
 /* ---------- Urlaub ---------- */
@@ -798,7 +801,7 @@ function vFortschritt(){
     <button class="btn" style="margin-bottom:8px" onclick="exportData()">💾 Backup → OneDrive</button>
     <div class="row"><button class="btn sec" onclick="exportData(true)">Nur herunterladen</button><button class="btn sec" onclick="document.getElementById('imp').click()">Backup laden</button></div>
     <input type="file" id="imp" accept="application/json,.json" hidden onchange="importData(this)"></section>
-    <p class="mute small" style="text-align:center">Shape of my life · App v8 · Plan v2</p>`;
+    <p class="mute small" style="text-align:center">Shape of my life · App v8.1 (20261126) · Plan v2</p>`;
   return h}
 function sheetPosture(){openSheet(`<h2>Haltung messen</h2><p class="mute small">Schuhe aus, Fersen ~5 cm von der Wand, Po und Schulterblätter an der Wand, locker stehen, Blick geradeaus (Kinn nicht hochziehen). Am besten misst jemand anderer. 1× im Monat, gleiche Tageszeit.</p>
    <div class="field"><label>1 · Hinterkopf–Wand (cm) – 0, wenn er die Wand locker berührt</label><input id="p-h" inputmode="decimal"></div>
